@@ -12,6 +12,7 @@ Importing the library is all that you need to do, because the `init()`
 function will launch a goroutine to collect and submit metrics.
 
 
+
 ## Sample Application
 
 The following example shows how little effort is required.  As documented
@@ -33,6 +34,7 @@ automatically.
 		   time.Sleep(1 * time.Second)
         }
       }
+
 
 
 ## Configuration
@@ -67,6 +69,7 @@ If you need to submit to a non-standard port you can include that in your `$METR
      $ METRICS=metrics.example.com:2233 ./application
 
 
+
 ## Advanced Configuration
 
 Although we've discussed the only mandatory setting, `METRICS`, there
@@ -78,6 +81,16 @@ are a couple more environmental variables you might wish to set.
 | `METRICS_PREFIX` | If this is set then all metrics will have the specified prefix.  (Remember to add the trailing period!)                           |
 | `METRICS_PROTOCOL` | If this is set to `tcp` then TCP will be used, instead of the default of UDP updates                           |
 | `METRICS_VERBOSE`  | If this is non-empty metrics will be echoed to STDOUT.   |
+
+
+
+## Metric Meaning
+
+The meaning of the submitted metrics should be obvious, but if you need
+a reference you should consult the documentation for the MemStats structure:
+
+* https://golang.org/pkg/runtime/#MemStats
+
 
 
 ## Systemd
