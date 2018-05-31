@@ -16,14 +16,12 @@ func init() {
 	host := os.Getenv("METRICS")
 
 	if host != "" {
-		fmt.Printf("HOST: %s\n", host)
 		var err error
 		g, err = graphite.NewGraphite(host, 2003)
-		fmt.Printf("%v\n", err)
 		if err == nil {
 			go runCollector()
 		} else {
-			fmt.Printf("Error setting up metrics: %s\n", err.Error())
+			fmt.Printf("Error setting up metrics - skipping - %s\n", err.Error())
 		}
 	}
 }
