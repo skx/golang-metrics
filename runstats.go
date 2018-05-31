@@ -33,7 +33,6 @@ func runCollector() {
 
 	gaugeFunc := func(key string, val uint64) {
 		if g != nil {
-			fmt.Printf("%s ->%s\n", prefix+key, strconv.FormatUint(val, 10))
 			g.SimpleSend(prefix+key, strconv.FormatUint(val, 10))
 		}
 	}
