@@ -75,6 +75,7 @@ are a couple more environmental variables you might wish to set.
 | Setting            | Purpose                                                  |
 | -------------------|----------------------------------------------------------|
 | `METRICS_DELAY`    | If this is set to an integer then it will be used to control how often metrics are sent.  The default is  `10` meaning metrics will be submitted every ten seconds |
+| `METRICS_PREFIX` | If this is set then all metrics will have the specified prefix.  (Remember to add the trailing period!)                           |
 | `METRICS_PROTOCOL` | If this is set to `tcp` then TCP will be used, instead of the default of UDP updates                           |
 | `METRICS_VERBOSE`  | If this is non-empty metrics will be echoed to STDOUT.   |
 

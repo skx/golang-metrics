@@ -18,12 +18,22 @@ var g *graphite.Graphite
 // Should we be verbose?
 var verbose bool
 
+// The prefix of all our metrics
+var prefix string
+
 func init() {
 
 	// Should we be verbose?
 	v := os.Getenv("METRICS_VERBOSE")
 	if v != "" {
 		verbose = true
+	}
+
+	// Do we have a custom prefix?
+	prefix = os.Getenv("METRICS_PREFIX")
+	if prefix == "" {
+		// If not use the default.
+		prefix = "go." + path.Base(os.Args[0]) + "."
 	}
 
 	// Get the destination to send the metrics to.
@@ -42,7 +52,7 @@ func init() {
 		// port should be an integer
 		port, err := strconv.Atoi(p)
 		if err != nil {
-			fmt.Printf("Error convering port %s to integer: %s\n", p, err.Error())
+			fmt.Printf("Error converting port %s to integer: %s\n", p, err.Error())
 			return
 		}
 
@@ -69,7 +79,6 @@ func init() {
 }
 
 func runCollector() {
-	prefix := "go." + path.Base(os.Args[0]) + "."
 
 	gaugeFunc := func(key string, val uint64) {
 		if g != nil {
