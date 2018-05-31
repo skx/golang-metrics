@@ -10,6 +10,9 @@ To use it you simply need to add the following import to your application:
 This works because the `init()` function will start a goroutine to collect
 and submit metrics every 10 seconds.
 
+
+## Sample Application
+
 The following example shows how little effort is required, the `import`
 line literally does everything!
 
@@ -29,6 +32,8 @@ line literally does everything!
         }
       }
 
+
+## Configuration
 
 Of course you need to tell the system _where_ to send your metrics.  So to
 do that it reads the contents of the `METRICS` environmental variable.
@@ -50,3 +55,13 @@ metrics with names like these:
 * `go.overseer.cpu.goroutines`
 * `go.overseer.mem.alloc`
 * `..`
+
+
+## Licensing / Credits
+
+The metric-collection code was copied from the library written by Brian Hatfield, which is available here:
+
+* https://github.com/bmhatfield/go-runtime-metrics
+
+That code was licensed under the MIT license, which has been included in this
+repository.
