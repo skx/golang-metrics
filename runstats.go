@@ -2,6 +2,7 @@ package runstats
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path"
 	"strconv"
@@ -17,12 +18,30 @@ func init() {
 
 	if host != "" {
 		var err error
-		g, err = graphite.NewGraphite(host, 2003)
-		if err == nil {
-			go runCollector()
-		} else {
-			fmt.Printf("Error setting up metrics - skipping - %s\n", err.Error())
+
+		// Split the into Host + Port
+		h, p, err := net.SplitHostPort(host)
+		if err != nil {
+			// If that failed we assume the port was missing
+			h = host
+			p = "2003"
 		}
+
+		// port should be an integer
+		port, err := strconv.Atoi(p)
+
+		if err != nil {
+			fmt.Printf("Error convering port %s to integer: %s\n", p, err.Error())
+			return
+		}
+
+		g, err = graphite.NewGraphite(h, port)
+		if err != nil {
+			fmt.Printf("Error setting up metrics - skipping - %s\n", err.Error())
+			return
+		}
+
+		go runCollector()
 	}
 }
 
