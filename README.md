@@ -84,13 +84,17 @@ are a couple more environmental variables you might wish to set.
 
 
 
-## Metric Meaning
+## Meaning of Metrics & Grafana Example
 
 The meaning of the submitted metrics should be obvious, but if you need
 a reference you should consult the documentation for the MemStats structure:
 
 * https://golang.org/pkg/runtime/#MemStats
 
+You can find  a sample [grafana dashboard](grafana/) in this repository,
+as well as the obligatory screenshot:
+
+* [Screenshot of grafana-dashboard](grafana/dashboard.png)
 
 
 ## Systemd
