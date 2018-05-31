@@ -62,7 +62,7 @@ metrics with names like these:
 * `go.overseer.mem.alloc`
 * `..`
 
-If you need to submit to a non-standard port you can include that in your $METRICS string:
+If you need to submit to a non-standard port you can include that in your `$METRICS` setup:
 
      $ METRICS=metrics.example.com:2233 ./application
 
@@ -70,8 +70,7 @@ If you need to submit to a non-standard port you can include that in your $METRI
 ## Systemd
 
 If you're launching your application under the control of systemd you can
-configure the environment easily in your `.service` file by adding an
-`Environment` setting.  For example the following service:
+configure the destination in your `.service` file by adding an `Environment` setting.  For example the following service:
 
      [Unit]
      Description=My service..
