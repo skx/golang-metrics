@@ -3,18 +3,20 @@
 This is a simple library to automatically submit metrics to a remote
 graphite/carbon server.
 
-To use it you simply need to add the following import to your application:
+Using this library is as simple as adding the following import to your
+application:
 
     _ "github.com/skx/golang-metrics"
 
-This works because the `init()` function will start a goroutine to collect
-and submit metrics every 10 seconds.
+Importing the library is all that you need to do, because the `init()`
+function will launch a goroutine to collect and submit metrics.
 
 
 ## Sample Application
 
-The following example shows how little effort is required, the `import`
-line literally does everything!
+The following example shows how little effort is required, as documented
+above the `import` carries out the setup and launches the metric-collection
+automatically.
 
       package main
 
@@ -27,7 +29,7 @@ line literally does everything!
 
       func main() {
         for {
-		   fmt.Printf("Alive\n")
+		   fmt.Printf("This process is alive, and submitting metrics!\n")
 		   time.Sleep(1 * time.Second)
         }
       }
@@ -35,16 +37,20 @@ line literally does everything!
 
 ## Configuration
 
-Of course you need to tell the system _where_ to send your metrics.  So to
-do that it reads the contents of the `METRICS` environmental variable.
+There is only one thing you need to configure, which is the address of
+the host to submit your metrics to.   The environmental variable
+`METRICS` will be used for that purpose.
 
-Assuming you've saved the above example in `~/stats/main.go` you can start
-it like so:
+* If there is no `METRICS` variable defined then no metrics will be collected.
+   * Because collecting things is pointless without somewhere to send them.
+
+Assuming you've saved the example included earlier in `~/main.go` you can
+start it like so:
 
      $ METRICS=metrics.example.com go run ./main.go
 
-The metrics submitted will be prefixed by the basename of your binary, and
- the prefix `go`.  i.e:
+The metrics will be submitted to the host `metrics.example.com`, and each
+metric will prefixed by the basename of your binary, and the prefix `go`.  i.e:
 
 * `go.$(basename argv[0]).*`
 
@@ -55,6 +61,31 @@ metrics with names like these:
 * `go.overseer.cpu.goroutines`
 * `go.overseer.mem.alloc`
 * `..`
+
+If you need to submit to a non-standard port you can include that in your $METRICS string:
+
+     $ METRICS=metrics.example.com:2233 ./application
+
+
+## Systemd
+
+If you're launching your application under the control of systemd you can
+configure the environment easily in your `.service` file by adding an
+`Environment` setting.  For example the following service:
+
+     [Unit]
+     Description=My service..
+
+     [Service]
+     WorkingDirectory=/srv/blah
+     User=blah
+     Environment="METRICS=metrics.example.com:2003"
+     ExecStart=/srv/blah/bin/application arugments
+     Restart=always
+     StartLimitInterval=2
+     StartLimitBurst=20
+     PrivateTmp=yes
+     RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 
 
 ## Licensing / Credits
