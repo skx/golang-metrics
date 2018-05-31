@@ -14,7 +14,7 @@ function will launch a goroutine to collect and submit metrics.
 
 ## Sample Application
 
-The following example shows how little effort is required, as documented
+The following example shows how little effort is required.  As documented
 above the `import` carries out the setup and launches the metric-collection
 automatically.
 
@@ -37,7 +37,7 @@ automatically.
 
 ## Configuration
 
-There is only one thing you need to configure, which is the address of
+There is only one thing you _need_ to configure, the address of
 the host to submit your metrics to.   The environmental variable
 `METRICS` will be used for that purpose.
 
