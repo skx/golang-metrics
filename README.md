@@ -19,6 +19,9 @@ The following example shows how little effort is required.  As documented
 above the `import` carries out the setup and launches the metric-collection
 automatically.
 
+The following program just prints a message, once a second, but due to the
+magical import it can _also_ collect and submit metrics:
+
       package main
 
       import (
@@ -39,9 +42,9 @@ automatically.
 
 ## Configuration
 
-There is only one thing you _need_ to configure, the address of
-the host to submit your metrics to.   The environmental variable
-`METRICS` will be used for that purpose.
+There is only one thing you must configure, the address of the host to submit
+your metrics to.   The environmental variable `METRICS` will be used for that
+purpose.
 
 * If there is no `METRICS` variable defined then no metrics will be collected.
    * Because collecting things is pointless without somewhere to send them.
@@ -63,8 +66,9 @@ metrics with names like these:
 * `go.overseer.cpu.goroutines`
 * `go.overseer.mem.alloc`
 * `..`
+* `go.overseer.uptime`
 
-If you need to submit to a non-standard port you can include that in your `$METRICS` setup:
+If your host runs the submission agent upon a non-standard port you can specify that as you would expect:
 
      $ METRICS=metrics.example.com:2233 ./application
 
@@ -72,14 +76,15 @@ If you need to submit to a non-standard port you can include that in your `$METR
 
 ## Advanced Configuration
 
-Although we've discussed the only mandatory setting, `METRICS`, there
-are a couple more environmental variables you might wish to set.
+The only mandatory environmental-variable is `METRICS`, however there
+are a couple more environmental variables you might wish to set to tweak
+behaviour:
 
 | Setting            | Purpose                                                  |
 | -------------------|----------------------------------------------------------|
 | `METRICS_DELAY`    | If this is set to an integer then it will be used to control how often metrics are sent.  The default is  `10` meaning metrics will be submitted every ten seconds |
 | `METRICS_PREFIX` | If this is set then all metrics will have the specified prefix.  (Remember to add the trailing period!)                           |
-| `METRICS_PROTOCOL` | If this is set to `tcp` then TCP will be used, instead of the default of UDP updates                           |
+| `METRICS_PROTOCOL` | If this is set to `tcp` then TCP will be used, instead of UDP updates.                          |
 | `METRICS_VERBOSE`  | If this is non-empty metrics will be echoed to STDOUT.   |
 
 
@@ -87,11 +92,11 @@ are a couple more environmental variables you might wish to set.
 ## Meaning of Metrics & Grafana Example
 
 The meaning of the submitted metrics should be obvious, but if you need
-a reference you should consult the documentation for the MemStats structure:
+a reference you can consult the documentation for the MemStats structure:
 
 * https://golang.org/pkg/runtime/#MemStats
 
-You can find  a sample [grafana dashboard](grafana/) in this repository,
+You can find a sample [grafana dashboard](grafana/) in this repository,
 as well as the obligatory screenshot:
 
 * [Screenshot of grafana-dashboard](grafana/dashboard.png)
