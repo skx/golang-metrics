@@ -28,6 +28,9 @@ type Collector struct {
 	// must also be set to true for this to take affect. Defaults to true.
 	EnableGC bool
 
+	// StartTime records when this application was launched
+	StartTime time.Time
+
 	// Done, when closed, is used to signal Collector that is should stop collecting
 	// statistics and the Run function should return. If Done is set, upon shutdown
 	// all gauges will be sent a final zero value to reset their values to 0.
@@ -45,6 +48,7 @@ func New(gaugeFunc GaugeFunc) *Collector {
 		EnableCPU: true,
 		EnableMem: true,
 		EnableGC:  true,
+		StartTime: time.Now(),
 		gaugeFunc: gaugeFunc,
 	}
 }
@@ -107,6 +111,7 @@ func (c *Collector) outputStats() {
 			c.outputGCStats(m)
 		}
 	}
+	c.outputTimeStats()
 }
 
 func (c *Collector) outputCPUStats(s *cpuStats) {
@@ -149,4 +154,8 @@ func (c *Collector) outputGCStats(m *runtime.MemStats) {
 	c.gaugeFunc("mem.gc.pause_total", m.PauseTotalNs)
 	c.gaugeFunc("mem.gc.pause", m.PauseNs[(m.NumGC+255)%256])
 	c.gaugeFunc("mem.gc.count", uint64(m.NumGC))
+}
+
+func (c *Collector) outputTimeStats() {
+	c.gaugeFunc("uptime", uint64(time.Since(c.StartTime).Seconds()))
 }
