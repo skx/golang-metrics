@@ -59,8 +59,8 @@ metric will prefixed by the basename of your binary, and the prefix `go`.  i.e:
 
 * `go.$(basename argv[0]).*`
 
-As a concrete example an application binary called `overseer` would submit
-metrics with names like these:
+As a concrete example the binary located at `/opt/overseer/bin/overseer`
+would submit metrics with names like these:
 
 * `go.overseer.cpu.cgo_calls`
 * `go.overseer.cpu.goroutines`
@@ -82,30 +82,38 @@ behaviour:
 
 | Setting            | Purpose                                                  |
 | -------------------|----------------------------------------------------------|
-| `METRICS_DELAY`    | If this is set to an integer then it will be used to control how often metrics are sent.  The default is  `10` meaning metrics will be submitted every ten seconds |
+| `METRICS_DELAY`    | If this is set to an integer then it will be used to control how often metrics are collected and sent.  The default is `10` meaning metrics will be submitted every ten seconds. |
 | `METRICS_PREFIX` | If this is set then all metrics will have the specified prefix.  (Remember to add the trailing period!)                           |
 | `METRICS_PROTOCOL` | If this is set to `tcp` then TCP will be used, instead of UDP updates.                          |
 | `METRICS_VERBOSE`  | If this is non-empty metrics will be echoed to STDOUT.   |
 
 
 
-## Meaning of Metrics & Grafana Example
+## Meaning of Metrics
 
 The meaning of the submitted metrics should be obvious, but if you need
 a reference you can consult the documentation for the MemStats structure:
 
 * https://golang.org/pkg/runtime/#MemStats
 
+
+
+## Grafana Integration
+
 You can find a sample [grafana dashboard](grafana/) in this repository,
-as well as the obligatory screenshot:
+which can be imported to your installation.  That will use the prefix `go.*`
+to automatically create a drop-down of all your available applications.
+
+The obligatory screenshot can be viewed here:
 
 * [Screenshot of grafana-dashboard](grafana/dashboard.png)
+
 
 
 ## Systemd
 
 If you're launching your application under the control of systemd you can
-configure the destination in your `.service` file by adding an `Environment` setting.  For example the following service:
+configure the metrics target in your `.service` file by adding an `Environment` setting.  For example:
 
      [Unit]
      Description=My service..
@@ -114,6 +122,7 @@ configure the destination in your `.service` file by adding an `Environment` set
      WorkingDirectory=/srv/blah
      User=blah
      Environment="METRICS=metrics.example.com:2003"
+     Environment="METRICS_DELAY=20"
      ExecStart=/srv/blah/bin/application arugments
      Restart=always
      StartLimitInterval=2
