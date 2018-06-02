@@ -130,6 +130,24 @@ configure the metrics target in your `.service` file by adding an `Environment` 
      PrivateTmp=yes
      RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 
+Adding multiple `Environment=".."` lines will do the right thing.  If you want to set multiple environmental variables you should probably use the Systemd `EnvironmentFile` setting instead:
+
+     [Unit]
+     Description=My service..
+
+     [Service]
+     WorkingDirectory=/srv/blah
+     User=blah
+     EnvironmentFile=-/etc/default/my-service
+     ExecStart=/srv/blah/bin/application arugments
+     Restart=always
+     StartLimitInterval=2
+     StartLimitBurst=20
+     PrivateTmp=yes
+     RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+(Here the "`-`" prefix to the path means that no error messages are generated if the specified environment file does not exist.)
+
 
 ## Licensing / Credits
 
