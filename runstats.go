@@ -37,45 +37,54 @@ func init() {
 	}
 
 	// Get the destination to send the metrics to.
-	host := os.Getenv("METRICS")
-	if host != "" {
-		var err error
-
-		// Split the into Host + Port
-		h, p, err := net.SplitHostPort(host)
-		if err != nil {
-			// If that failed we assume the port was missing
-			h = host
-			p = "2003"
-		}
-
-		// port should be an integer
-		port, err := strconv.Atoi(p)
-		if err != nil {
-			fmt.Printf("Error converting port %s to integer: %s\n", p, err.Error())
-			return
-		}
-
-		//
-		// We default to UDP, but if `METRICS_PROTOCOL` is set
-		// to `tcp` we'll use that instead.
-		//
-		protocol := os.Getenv("METRICS_PROTOCOL")
-		if protocol == "" {
-			protocol = "udp"
-		}
-
-		//
-		// Create the graphite-object.
-		//
-		g, err = graphite.GraphiteFactory(protocol, h, port, "")
-		if err != nil {
-			fmt.Printf("Error setting up metrics - skipping - %s\n", err.Error())
-			return
-		}
-
-		go runCollector()
+	host := os.Getenv("METRICS_HOST")
+	if host == "" {
+		host = os.Getenv("METRICS")
 	}
+	if host == "" {
+		return
+	}
+
+	var err error
+
+	// Split our host-value into Host + Port
+	h, p, err := net.SplitHostPort(host)
+	if err != nil {
+		// If that failed we assume the port was missing
+		h = host
+		p = "2003"
+	}
+
+	// port should be an integer
+	port, err := strconv.Atoi(p)
+	if err != nil {
+		fmt.Printf("Error converting port %s to integer: %s\n", p, err.Error())
+		return
+	}
+
+	//
+	// We default to UDP, but if `METRICS_PROTOCOL` specifies TCP we
+	// will use that instead.
+	//
+	protocol := os.Getenv("METRICS_PROTOCOL")
+	if protocol == "" {
+		protocol = "udp"
+	}
+
+	//
+	// Create the graphite-object.
+	//
+	g, err = graphite.GraphiteFactory(protocol, h, port, "")
+	if err != nil {
+		fmt.Printf("Error setting up metrics - skipping - %s\n", err.Error())
+		return
+	}
+
+	//
+	// Launch a goroutine to submit metrics on our schedule
+	//
+	go runCollector()
+
 }
 
 func runCollector() {
