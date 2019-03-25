@@ -123,7 +123,7 @@ configure the metrics target in your `.service` file by adding an `Environment` 
      User=blah
      Environment="METRICS=metrics.example.com:2003"
      Environment="METRICS_DELAY=20"
-     ExecStart=/srv/blah/bin/application arugments
+     ExecStart=/srv/blah/bin/application arguments
      Restart=always
      StartLimitInterval=2
      StartLimitBurst=20
@@ -139,7 +139,7 @@ Adding multiple `Environment=".."` lines will do the right thing.  If you want t
      WorkingDirectory=/srv/blah
      User=blah
      EnvironmentFile=-/etc/default/my-service
-     ExecStart=/srv/blah/bin/application arugments
+     ExecStart=/srv/blah/bin/application arguments
      Restart=always
      StartLimitInterval=2
      StartLimitBurst=20
